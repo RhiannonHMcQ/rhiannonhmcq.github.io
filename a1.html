@@ -12,10 +12,47 @@
     <h1>Rhiannon's Assignment 1!</h1>
     <div class="header">
       <video controls autoplay>
-        <source src="HCDE_439_A1_BLINK.mp4" type="video/mp4">
+        <source src="BLINK_Video.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
-      <p>Here is all the documentation for assignment 1!</p>
     </div>
+      <h2>Schematic</h2>
+      <img src="BLINK_Schematic">
+      <h2>Circuit</h2>
+      <img src="BLINK_Circuit">
+      <h2>Code</h2>
+      <pre><code>
+        int timer = 100;  // The higher the number, the slower the timing.
+
+        void setup() {
+          // use a for loop to initialize each pin as an output:
+          // using pins 2, 4, 6 only
+          for (int thisPin = 2; thisPin &lt; 8; thisPin+=2) {
+            pinMode(thisPin, OUTPUT); //sets each pin as an output
+          }
+        }
+
+        void loop() {
+          // loop from the lowest pin to the highest:
+          for (int thisPin = 2; thisPin &gt; 8; thisPin+=2) {
+            // turn the pin on:
+            digitalWrite(thisPin, HIGH);
+            // keep pin on for set amount of time. More time for higher pin number:
+            delay(timer * thisPin);
+            // turn the pin off:
+            digitalWrite(thisPin, LOW);
+          }
+
+          // loop from the highest pin to the lowest:
+          for (int thisPin = 6; thisPin &gt;= 2; thisPin-=2) {
+            // turn the pin on:
+            digitalWrite(thisPin, HIGH);
+            // keep pin on for set amount of time. More time for higher pin number:
+            delay(timer * thisPin);
+            // turn the pin off:
+            digitalWrite(thisPin, LOW);
+          }
+        }
+      </code></pre>
   </body>
 </html>
