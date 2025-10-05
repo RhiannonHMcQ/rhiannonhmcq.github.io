@@ -16,6 +16,7 @@
         Your browser does not support the video tag.
       </video>
     </div>
+    <div></div>
       <h2>Schematic</h2>
       <figure>
         <img src="BLINK_Schematic.jpg">
@@ -27,11 +28,13 @@
           and a minimum of 85 ohms resistance was needed for the blue LED (it was given 100 ohms).
         </figcaption>
       </figure>
+      <div></div>
       <h2>Circuit</h2>
       <figure>
         <img src="BLINK_Circuit.jpg">
         <figcaption>The circuit used (on a breadboard) of the blinking LED pattern.</figcaption>
       </figure>
+      <div></div>
       <h2>Code</h2>
       <pre><code>
         int timer = 100;  // The higher the number, the slower the timing.
@@ -66,6 +69,7 @@
           }
         }
       </code></pre>
+      <div></div>
       <h2>Question answers</h2>
       <p>
         <strong>1. Draw a graph where the X axis is time and the Y axis is voltage across the LEDs.
@@ -77,6 +81,8 @@
             the blue LED is the solid black and yellow line, and the green LED is the dotted line. 
           </figcaption>
         </figure>
+      </p>
+      <p>
         <strong>2. How many LEDs could you blink independently with your Arduino?
           How much current would that draw?
         </strong>
@@ -86,11 +92,15 @@
         are blinking only one LED per pin (due to coding challenges), then you are limited by the 
         number of pins. If assuming 13 pins, you can blink 13 LEDs independently at once, for about
         260 mA of current.
+      </p>
+      <p>
         <strong>3. How fast do you need to blink your LEDs until you no longer can tell they are blinking?</strong>
         I'm sure it depends on the person, LED color, and resistance level, but for me, with a red LED using a 220 
         ohm resistor, I stopped being able to tell around 10-15 ms (when the light was on and off for about 10-15 ms
         each time.). At 10 ms it was impossible for me to tell, and at 12-15 ms I could just barely. I didn't test
         it much beyond that.
+      </p>
+      <p>
         <strong>4. Did you use AI tools in completing this assignment?</strong>
         No, I did not use AI tools. There were times I used Google and an AI summary was provided, but I did my best 
         to find the actual sources of that information rather than just reading the summary. 
