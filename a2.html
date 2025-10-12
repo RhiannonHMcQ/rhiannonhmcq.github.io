@@ -119,13 +119,22 @@
         <strong>2. Given your schematic, circuit, and firmware, assuming the only thing that draws current is your 
           LEDs, how long would your circuit run if powered by a 1200 mAh battery?
         </strong>
-        
+        Assuming my button doesn't draw any current, each LED would draw about 20 mAh when it's on. Because no two LEDs 
+        are on at the same time (they are alternating), only around 20 mAh will be used at any given time. Additionally,
+        for about 30 milliseconds at a time, there will be a pause (between each 30 milliseconds of an LED being on). So,
+        one LED is drawing about 20 mAh of current at a time for about 30 milliseconds, then no current for about 30 
+        milliseconds. Although there is a fade effect, and the LEDs won't be on 100% of the time, I will be assuming they 
+        are on all 30 milliseconds of each cycle. 1200 mAh divided by 20 mAh is 60, which means, theoretically, 60 cycles 
+        can run before the battery runs out. Each cycle is 30 milliseconds on, 30 milliseconds off, for a total of 60 ms. 
+        That means we have 3600 ms of battery power, or 3.6 minutes. 
       </p>
       <p>
         <strong>Measure and record the actual voltage across one of your LEDs when it's on. How does this compare to the 
           theoretical voltage for your LED color?
         </strong>
-        
+        My blue LED measured just 3.06 V, as opposed to the expected 3.3 V. This is a lot lower than I expected, which makes
+        me glad the resistor gives some clearance (it's higher resistance than necessary for a 3.3 V LED because of the limited 
+        options provided for resistor values).
       </p>
       <p>
         <strong>4. Did you use AI tools in completing this assignment?</strong>
