@@ -4,15 +4,132 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+    <title>Rhiannon's HCDE 439 Physical Computing Page!</title>
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 2!</h1>
+    <h1>Rhiannon's Assignment 2!</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 2!</p>
+      <video controls autoplay>
+        <source src="FADE_Video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
     </div>
+    <br>
+      <h2>Schematic</h2>
+      <figure>
+        <img src="FADE_Schematic.jpg">
+        <figcaption> Four seperate pins leading to this interconnected circuit. All lead to ground. The button's 
+          circuit (top left) shows a connection to a steady 5V power source, and a connection to pin 2 (when the 
+          button is pushed). A 10k resistor was used, as it's the standard value for buttons. All three LEDs that 
+          are within the RGB LED were given their own resistors, blue at 100 ohms and red and green at 220 ohms each. 
+          These values are the same values calculated for the BLINK assignment based on V=IR. 
+        </figcaption>
+      </figure>
+      <br>
+      <h2>Circuit</h2>
+      <figure>
+        <img src="FADE_Circuit.jpg">
+        <figcaption>The circuit used (on a breadboard) of the fading LED pattern, with the button.</figcaption>
+      </figure>
+      <br>
+      <h2>Code</h2>
+      <pre><code>
+        /*
+        Turns on and off the fading of a 3 LEDS using a button.
+        Inspired by code from DojoDave and Tom Igoe
+        */
+
+        // constants won't change. They're used here to set pin numbers:
+        const int buttonPin = 2;  // the number of the pushbutton pin
+        const int redPin = 9;    // the number of the red LED pin
+        const int greenPin = 10; // the number of the green LED pin
+        const int bluePin = 11; // the number of the blue LED pin
+
+        // variables will change:
+        int buttonState = 0;  // variable for reading the pushbutton status
+
+        int brightness = 0; // brightness level for LEDs
+        int fadeAmount = 5; // incremental value for how much the LEDs will fade
+
+        void setup() {
+          // initialize the LED pins as an output:
+          pinMode(redPin, OUTPUT); // red LED
+          pinMode(greenPin, OUTPUT); // green LED
+          pinMode(bluePin, OUTPUT); // blue LED
+          // initialize the pushbutton pin as an input:
+          pinMode(buttonPin, INPUT); // button
+        }
+
+        void loop() {
+          // read the state of the pushbutton value:
+          buttonState = digitalRead(buttonPin);
+
+          // check if the pushbutton is pressed. If it is, run through fade
+          if (buttonState == HIGH) {
+            // iterate through each LED pin 
+              for (int i = 9; i < 12; i++) {
+              // set the brightness of the current pin (i)
+              analogWrite(i, brightness);
+              // change the brightness for next time through the loop:
+              brightness = brightness + fadeAmount;
+
+              // reverse the direction of the fading at the ends of the fade:
+              if (brightness <= 0 || brightness >= 255) {
+                fadeAmount = -fadeAmount;
+              }
+              // wait for 30 milliseconds
+              delay(30);
+
+              // turn off the current pin before the next pin is used
+              analogWrite(i, 0);
+
+              // wait for 30 milliseconds 
+              delay(30);
+            }
+
+          } else {
+            // turn LED off:
+            for (int i = 9; i < 12; i++) {
+              digitalWrite(i, LOW);
+            }
+          }
+  
+        }
+      </code></pre>
+      <br>
+      <h2>Question answers</h2>
+      <p>
+        <strong>1. Draw a graph where the X axis is time and the Y axis is voltage. Draw 3 lines representing
+          the voltage across an LED with analogWrite(led, 64), analogWrite(led, 128), and analogWrite(led, 255).
+        </strong>
+        <figure>
+          <img src="FADE_Q1.jpg">
+          <figcaption>
+            A graph of the three seperate lines for analogWrite in different states. An LED given each state would 
+            pulse rapidly between high (5V) and low (0V). For a value of 255, the LED would stay on high, for a value
+            of 0 the LED would stay on low. For all other values, this pulse happens within a time frame, and takes up
+            that percentage of the time. For example, 128 (seen in blue on the graph) pulses between high and low, staying 
+            on each for 50% of the time. This is its duty cycle.
+          </figcaption>
+        </figure>
+      </p>
+      <p>
+        <strong>2. Given your schematic, circuit, and firmware, assuming the only thing that draws current is your 
+          LEDs, how long would your circuit run if powered by a 1200 mAh battery?
+        </strong>
+        
+      </p>
+      <p>
+        <strong>Measure and record the actual voltage across one of your LEDs when it's on. How does this compare to the 
+          theoretical voltage for your LED color?
+        </strong>
+        
+      </p>
+      <p>
+        <strong>4. Did you use AI tools in completing this assignment?</strong>
+        No, I did not use AI tools. 
+      </p>
   </body>
 </html>
