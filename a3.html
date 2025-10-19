@@ -94,10 +94,10 @@
             }
           } else if (mapValue > 85 && mapValue <= 170){
             analogWrite(greenPin, 255); // turn on green led if sensor is medium input
-          if (mapValue <= 100) {
-            analogWrite(bluePin, 128); // turn on blue led half way
-          } else if (mapValue >= 155) {
-            analogWrite(redPin, 128); // turn on red led half way
+            if (mapValue <= 100) {
+              analogWrite(bluePin, 128); // turn on blue led half way
+            } else if (mapValue >= 155) {
+              analogWrite(redPin, 128); // turn on red led half way
             }
           } else if (mapValue > 170) {
             analogWrite(redPin, 255); // turn on red led if sensor is high input
@@ -137,7 +137,9 @@
         </strong>
         <figure>
           <img src="InputOutput_Q2.jpg">
-          <figcaption>
+          <figcaption> Graph of the measured voltage at A0 (based on photoresistor) over time. Values are not exact, but shows
+            the estimated voltage over the 12 second video on this website. The voltage is never fully 5V or 0V because the allowed 
+            range (from R2) is 4.17 to 0.45 V. These values correspond to various LED levels. 
           </figcaption>
         </figure>
       </p>
@@ -145,6 +147,12 @@
         <strong>3. AnalogWrite and analogRead are respectively 8-bit and 10-bit values. Imagine you had 10-bit PWM and a
           16-bit analog-to-digital converter instead. How would this change your map() code? Explain your answer. 
         </strong>
+        The map code would have to accomodate for the new ranges. The map code for 8-bit and 10-bit values are converting from a 
+        0-255 range to a 0-1023 range (if no other resistors or constraints need to be considered). For 10-bit and 16-bit, the map 
+        code would need to convert between a 0-1023 and 0-65,535. Because the range for a 16-bit converter is so large (in comparison 
+        to a 10-bit) this would mean that every change in the 0-65,535 range would have a very minimal impact to the 10-bit range. The
+        code may look like: map(value, 0, 65535, 0, 1023), meaning the 16-bit analog-to-digital converter would need to change more 
+        signficantly to make an impact ont he 10-bit values. 
       </p>
       <p>
         <strong>4. Did you use AI tools in completing this assignment?</strong>
