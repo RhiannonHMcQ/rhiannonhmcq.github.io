@@ -24,11 +24,13 @@
           has a pin (A0) measuring the resistance between two resistors (photoresistor and R2). The resistance of R2 is 10k ohms, calculated 
           using the max and min resistance of the photoresistor. These were found to be around 102k ohms and 2k ohms (tested using a 
           multimeter). The calculations below show that a 10k R2 resistor allows for a range of possible values.
-
-          When R1 (photoresistor) is 102k, R2 is 10k, V_in = 5V
-          V_out = 5V * (10k / 102k + 10k) = 0.45 <Var>
-
-          When R1 is 2k, R2 is 10k, V_in = 5V
+          <br>
+          When R1 (photoresistor) is 102k, R2 is 10k, V_in = 5V:
+          <br>
+          V_out = 5V * (10k / 102k + 10k) = 0.45V
+          <br>
+          When R1 is 2k, R2 is 10k, V_in = 5V:
+          <br>
           V_out = 5V * (10k / 2k + 10k) = 4.17 V
         </figcaption>
       </figure>
@@ -123,11 +125,13 @@
         This is because the measured voltage is between these two pins, and measures the voltage drop from the first pin. 
         The voltage drop from the photoresistor has a wide range of values, but the drop from the 10k resistor doesn't
         change as much in comparison. It is a more set value. 
-
-        When R1 is 10k, R2 (photoresistor) is 102k, V_in is 5V
+        <br>
+        When R1 is 10k, R2 (photoresistor) is 102k, V_in is 5V:
+        <br>
         V_out = 5V * (102k / 10k + 102k) = 0.9 V
-
-        When R1 is 10k, R2 is 2k, V_in is 5V
+        <br>
+        When R1 is 10k, R2 is 2k, V_in is 5V:
+        <br>
         V_out = 5V * (2k / 10k + 2k) = 0.8 V
 
       </p>
