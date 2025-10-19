@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Rhiannon's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Rhiannon's Assignment 3!</h1>
+    <div class="header">
+      <video controls autoplay>
+        <source src="InputOutput_Video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <br>
+      <h2>Schematic</h2>
+      <figure>
+        <img src="InputOutput_Schematic.jpg">
+        <figcaption> Four circuits running from various pins to ground. The photoresistor circuit (top left) starts at power (5V) and 
+          has a pin (A0) measuring the resistance between two resistors (photoresistor and R2). The resistance of R2 is 10k ohms, calculated 
+          using the max and min resistance of the photoresistor. These were found to be around 102k ohms and 2k ohms (tested using a 
+          multimeter). The calculations below show that a 10k R2 resistor allows for a range of possible values.
+
+          When R1 (photoresistor) is 102k, R2 is 10k, V_in = 5V
+          V_out = 5V * (10k / 102k + 10k) = 0.45 <Var>
+
+          When R1 is 2k, R2 is 10k, V_in = 5V
+          V_out = 5V * (10k / 2k + 10k) = 4.17 V
+        </figcaption>
+      </figure>
+      <br>
+      <h2>Circuit</h2>
+      <figure>
+        <img src="InputOutput_Circuit.jpg">
+        <figcaption> A photoresistor being measured at A0, with three LEDs connected at three different pins to set a RGB LED up. 
+          All pins go to ground, and all three RGB LEDs are able to run at different values as they are set out of different pins. 
+        </figcaption>
+      </figure>
+      <br>
+      <h2>Code</h2>
+      <pre><code>
+        // Takes input from a sensor and uses that value to turn 3 LEDs on and off.
+        // Uses analogWrite to turn LEDs partway on, fully on, or fully off. 
+
+        const int analogInPin = A0; // read in values at pin A0
+        const int bluePin = 6; // pin for blue led output
+        const int greenPin = 5; // pin for green led output
+        const int redPin = 3; // pin for red led output
+
+        int sensorMin = 1023; // variable for maximum value on sensor
+        int sensorMax = 0; // variable for minimum value on sensor
+        int sensorValue; // value read from sensor
+
+        void setup() {
+          // put your setup code here, to run once:
+          pinMode(bluePin, OUTPUT); // set ledPins to output
+          pinMode(greenPin, OUTPUT);
+          pinMode(redPin, OUTPUT);
+          Serial.begin(9600); // set up print ability 
+
+          while(millis() < 5000) { // for first five seconds
+            sensorValue = analogRead(analogInPin); // read light input
+
+            if(sensorValue > sensorMax) { // set new max value for sensor
+              sensorMax = sensorValue;
+            }
+
+            if(sensorValue < sensorMin) { // set new min value for sensor
+              sensorMin = sensorValue;
+            }
+          }
+        }
+
+        int mapValue; // mapped value after mapping sensorValue to 0 to 255 range
+
+        void loop() {
+          sensorValue = analogRead(analogInPin); // read value at pin and set it to sensor value
+          sensorValue = constrain(sensorValue, sensorMin, sensorMax); // keep any values within this range
+          Serial.print("Sensor Value: ");
+          Serial.print(sensorValue); // print out the sensor value
+
+          mapValue = map(sensorValue, sensorMin, sensorMax, 0, 255); // map the sensor value to a range of 0-255
+          Serial.print("\t Map value: ");
+          Serial.println(mapValue); // print out the map value (0-255)
+
+          if (mapValue <= 85) {
+            analogWrite(bluePin, 255); // turn on blue led if sensor value is low
+            if (mapValue >= 70) {
+              analogWrite(greenPin, 128); // turn on green led half way
+            }
+          } else if (mapValue > 85 && mapValue <= 170){
+            analogWrite(greenPin, 255); // turn on green led if sensor is medium input
+          if (mapValue <= 100) {
+            analogWrite(bluePin, 128); // turn on blue led half way
+          } else if (mapValue >= 155) {
+            analogWrite(redPin, 128); // turn on red led half way
+            }
+          } else if (mapValue > 170) {
+            analogWrite(redPin, 255); // turn on red led if sensor is high input
+            if (mapValue <= 185) {
+              analogWrite(greenPin, 128); // turn on green led half way
+            }
+          }
+
+          delay(30); // pause for 30 ms
+
+          analogWrite(bluePin, 0); // reset values
+          analogWrite(redPin, 0);
+          analogWrite(greenPin, 0);
+        }
+      </code></pre>
+      <br>
+      <h2>Question answers</h2>
+      <p>
+        <strong>1. In your voltage divider, can the variable resistor be either R1 or R2, or does it need to be one or
+          the other? Justify your answer with example calculations.
+        </strong>
+        If R1 and R2 were swapped, the range of possible values would be very low. These calculations can be seen below.
+        This is because the measured voltage is between these two pins, and measures the voltage drop from the first pin. 
+        The voltage drop from the photoresistor has a wide range of values, but the drop from the 10k resistor doesn't
+        change as much in comparison. It is a more set value. 
+
+        When R1 is 10k, R2 (photoresistor) is 102k, V_in is 5V
+        V_out = 5V * (102k / 10k + 102k) = 0.9 V
+
+        When R1 is 10k, R2 is 2k, V_in is 5V
+        V_out = 5V * (2k / 10k + 2k) = 0.8 V
+
+      </p>
+      <p>
+        <strong>2. Draw a graph where the x-axis is time and the y-axis is voltage. Plot the voltage at V-measure of your 
+          voltage divider of your shared gif. 
+        </strong>
+        <figure>
+          <img src="InputOutput_Q2.jpg">
+          <figcaption>
+          </figcaption>
+        </figure>
+      </p>
+      <p>
+        <strong>3. AnalogWrite and analogRead are respectively 8-bit and 10-bit values. Imagine you had 10-bit PWM and a
+          16-bit analog-to-digital converter instead. How would this change your map() code? Explain your answer. 
+        </strong>
+      </p>
+      <p>
+        <strong>4. Did you use AI tools in completing this assignment?</strong>
+        No, I did not use AI tools. 
+      </p>
+  </body>
+</html>
