@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Rhiannon's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Rhiannon's Assignment 4!</h1>
+    <div class="header">
+      <video controls autoplay>
+        <source src="Libraries_Video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <br>
+      <h2>Schematic</h2>
+      <figure>
+        <img src="Libraries_Schematic.jpg">
+        <figcaption> Schematic of the LCD display and the capacitive sensor. The LCD connects to a number of pins, power, and ground, as well
+            as to a potentiometer (which sets the contrast). The LCD has a 220 ohm resistor connected to the anode. The capacitive sensor has 
+            an input and output pin, as well as a wire acting as the sensor (for human conductivity). The resistor in this circuit is 1 mega ohm,
+            as is standard for capacitive sensors. 
+        </figcaption>
+      </figure>
+      <br>
+      <h2>Circuit</h2>
+      <figure>
+        <img src="Libraries_Circuit.jpg">
+        <figcaption> Shows the full circuit, including the LCD display, potentiometer, arduino uno, and wire acting as a capacitive sensor. 
+        </figcaption>
+      </figure>
+      <br>
+      <h2>Code</h2>
+      <pre><code>
+        /*
+        Based of LiquidCrystal Library - Hello World code, and 
+        capacitive sensor example code
+
+        The circuit:
+        * LCD RS pin to digital pin 12
+        * LCD Enable pin to digital pin 11
+        * LCD D4 pin to digital pin 5
+        * LCD D5 pin to digital pin 4
+        * LCD D6 pin to digital pin 3
+        * LCD D7 pin to digital pin 2
+        * LCD R/W pin to ground
+        * LCD VSS pin to ground
+        * LCD VCC pin to 5V
+        * 10K resistor:
+        * ends to +5V and ground
+        * wiper to LCD VO pin (pin 3)
+
+        Sensor pins:
+        * Input pin is pin 10
+        * Output pin is pin 9
+        * Capcitive sensor is wire connected to body
+
+        */
+
+        // include the library code:
+        #include <LiquidCrystal.h>
+        #include <CapacitiveSensor.h>
+
+        // 1 megohm resistor between pins 9 & 10, pin 9 is sensor pin
+        CapacitiveSensor   cs_4_2 = CapacitiveSensor(10,9);
+
+        // initialize the LCD library by associating any needed LCD interface pin
+        // with the arduino pin number it is connected to
+        // LCD contrast pin (V0) also connected to potentiometer to set contrast
+        const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+        LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+        void setup() {
+            // set up the LCD's number of columns and rows:
+            lcd.begin(16, 2);
+        }
+
+        void loop() {
+            // set the cursor to column 0, line 0
+            lcd.setCursor(0, 0);
+
+            // sensor output data
+	        long total1 =  cs_4_2.capacitiveSensor(30);
+
+            // print different messages for high vs low conductivity. high and low determined by 
+            // testing with a couple different people (for their conductivity levels)
+            if (total1 >= 800) { 
+                lcd.print("HighConductivity"); // print to LCD
+            } else {
+                lcd.print("Low conductivity"); // print to LCD
+            }
+
+            // set cursor to column 0, line 1 (second actual line)
+            lcd.setCursor(0, 1); 
+            // print sensor output to LCD
+            lcd.print(total1);
+
+            // delay to limit data to serial port (every one second)
+	        delay(1000);
+        }
+      </code></pre>
+      <br>
+      <h2>Question answers</h2>
+      <p>
+        <strong>1. Say you are using a servo motor you attach to pin 9. In your loop() you have the following code:
+        <br>
+        void loop() {
+            for (pos = 0; pos <= 180; pos += 1) {
+                myservo.write(pos); 
+                delay(100); 
+            }
+        }
+        <br>
+        Draw a graph with the x-axis as time and the y-axis as voltage at pin 9 with respect to ground.
+        </strong>
+        <figure>
+          <img src="Libraries_Q1.jpg">
+          <figcaption> Graph showing the motor moving for about 500 ms. With the assumption that moving 1 degree takes 
+            about 25 ms, and the given delay of 100 ms, the servo motor would move about 4 degrees in that time. 
+          </figcaption>
+        </figure>
+      </p>
+      <p>
+        <strong>2. Your input device is slightly broken, leading it to give us an erroneous reading 1% of the time. 
+        How can we address this? Answer in (pseudo)code.
+        </strong>
+        <em>If the erroneous data is an outlier, or obviously off, the following (pseudo) code could be added.</em>
+        <br>
+        Check sensor value. If value is unexpected (much greater, less than previous/expected value), ignore it and read new value. 
+        Else:
+        <br> 
+        Take the expected action (in this case, print value to LCD and print high/low message). 
+        <br> 
+        <em>If the data is not an outlier, but it is still an error, we could try smoothing out the data. This can be done as follows.</em>
+        <br>
+        Collect 10 data points from the sensor. Set the sensor value to the sum of those values, divided by 10. Take the expected action with that value.
+
+      </p>
+      <p>
+        <strong>3. Your input device is slightly noisy, leading the measurement to randomly deviate from the true 
+        measurement up or down by 10%. How can we address this? Answer in (pseudo)code.
+        </strong>
+        <em>Using a similar method as above, we can use the following (pseudo) code. To address the random 10% errors, a higher number of data 
+            points would be beneficial. The more data points that can be collected and averaged (in a short period of time), the better. 
+        </em>
+        <br>
+        Collect multiple data points from the sensor. Set the sensor value to the sum of those values, divided by the number of 
+        values collected. Take the expected action (in this case printing to LCD) with new sensor value. 
+
+      </p>
+      <p>
+        <strong>4. Did you use AI tools in completing this assignment?</strong>
+        No, I did not use AI tools. 
+      </p>
+  </body>
+</html>
