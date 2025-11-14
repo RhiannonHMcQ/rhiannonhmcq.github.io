@@ -20,14 +20,21 @@
       <h2>Schematic</h2>
       <figure>
         <img src="HighVoltage_Schematic.jpg">
-        <figcaption> 
+        <figcaption> Shows the capacitive sensor circuit, connected and powered by Arduino, and the LED strip circuit, connected to 
+          ground and power through an n-mosfet transistor. The transistor is connected to an Arduino analog pin, power from a 12V wall
+          supply, and ground (through the Arduino). The LED strip has sets of 3 LEDs in parallel, all LEDs causing about 3.3V drop. 
+          A 220 ohm resistor is used to limit current, as the LED strip (when using 20mA of current) calls for a 105 ohm resistor. It 
+          limits the amount of light displayed when the transistor gate is open. 
         </figcaption>
       </figure>
       <br>
       <h2>Circuit</h2>
       <figure>
         <img src="HighVoltage_Circuit.jpg">
-        <figcaption>  
+        <figcaption> Shows the circuit, in which the LED strip is connected to the 12V power supply and ground (through the transistor). 
+          The blue wire connects the transistor to pin 9 of the Arduino (gate). The 12V power supply is connected to the LED strip (power) 
+          and directly to ground. The capacitive sensor is connected to pins 2 and 4 of the Arduino, with a 1 mega-ohm resistor between them.
+          The yellow wire is the sensor, and senses touch capacitance.
         </figcaption>
       </figure>
       <br>
@@ -71,7 +78,15 @@
         </strong>
         <figure>
           <img src="HighVoltage_Q2.jpg">
-          <figcaption>
+          <figcaption> Connects a DC motor and resistor from power to ground. A flyback diode is connected in parallel so that any additional 
+            voltage is sent back through the DC motor, instead of damaging the circuit. A capacitor is connected in parallel as well (from power
+            to ground) to smooth out spikes. 
+            <br>
+            DC Motor Datasheet: https://www.moog.com/literature/MCG/moc23series.pdf
+            <br>
+            Flyback diode Datasheet: https://www.vishay.com/docs/88503/1n4001.pdf 
+            <br>
+            Capacitor Datasheet: https://www.tdk-electronics.tdk.com/inf/20/30/db/aec_2013/B41821_B43821.pdf
           </figcaption>
         </figure>
       </p>
@@ -80,10 +95,19 @@
           that shows how you would move the motors both forward, both back, then one forward one back, and one back then forward.
         </strong>
         <figure>
-          <img src="HighVoltage_Q3.jpg">
-          <figcaption>
+          <img src="HighVoltage_Q3_1.jpg">
+          <figcaption> Power is connected to pins 1, 16, 8, and 9, as well as to the motors. The motors are connected to pins 2 & 7, and 10 & 15. 
+            Pins 4,5, 12, 13 act as heat sinks connected to ground. Pins 2 and 7 controll motor 1, and pins 10 and 15 control motor 2. 
           </figcaption>
         </figure>
+        Pseudo code:
+        <pre><code>
+          // Set motor pins (2, 7, 10, 15)as outputs
+          // Move both forward by setting 2 and 10 HIGH, and 7 and 15 LOW
+          // Move both back by setting 7 and 15 HIGH, and 2 and 10 LOW
+          // Move motor 1 forward and motor 2 back by setting 2 and 15 HIGH, and 7 and 10 LOW
+          // Move motor 1 back and motor 2 forward by setting 7 and 10 HIGH, and 2 and 15 LOW
+        </code></pre>
       </p>
       <p>
         <strong>4. Did you use AI tools in completing this assignment?</strong>
