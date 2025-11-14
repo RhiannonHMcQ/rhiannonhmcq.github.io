@@ -33,7 +33,29 @@
       <br>
       <h2>Code</h2>
       <pre><code>
-        
+        // include the library code:
+        #include <CapacitiveSensor.h>
+
+        // 1 megohm resistor between pins 4 & 2, pin 2 is sensor pin
+        CapacitiveSensor   cs_4_2 = CapacitiveSensor(4,2);
+
+        void setup() {
+          pinMode(9, OUTPUT); // set pin 9 (gate of transistor) as output pin
+        }
+
+        void loop() {
+          // sensor output data
+          long total1 =  cs_4_2.capacitiveSensor(30);
+
+          // constrain data to certain values
+          total1 = constrain(total1, 0, 1000);
+
+          // map sensor data to 0 to 255 (for analogWrite in 8-bit)
+          total1 = map(total1, 0, 1000, 0, 255);
+          
+          // send data to light up LED strip to set level
+          analogWrite(9, total1);
+        }
       </code></pre>
       <br>
       <h2>Question answers</h2>
@@ -54,7 +76,7 @@
         </figure>
       </p>
       <p>
-        <strong>3. Use the datasheet for the L293D chipt. Draw a schematic using at least your arduino, this chip, and two motors. Write (pseudo) code 
+        <strong>3. Use the datasheet for the L293D chip. Draw a schematic using at least your arduino, this chip, and two motors. Write (pseudo) code 
           that shows how you would move the motors both forward, both back, then one forward one back, and one back then forward.
         </strong>
         <figure>
