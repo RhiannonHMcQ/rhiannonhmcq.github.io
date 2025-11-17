@@ -128,8 +128,8 @@
           background(colors.background);
           handlePlayerMove(); // player movement function
 
-          if (food.length < maxFood) { // chance to create more food on screen
-            if (random() < foodChance) new food.Sprite();
+          if (food.length &lt; maxFood) { // chance to create more food on screen
+            if (random() &lt; foodChance) new food.Sprite();
           }
 
           drawScore(); // add score panel in upper right of screen
@@ -223,7 +223,7 @@
 
           if (spr.idNum === player.idNum) updateScore(spr.d);
 
-          if (food.d < sizeThreshold) food.remove(); // if food is all 'eaten' food disappears
+          if (food.d &lt; sizeThreshold) food.remove(); // if food is all 'eaten' food disappears
         }
 
         function handlePlayerMove() { // player movement function
