@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Rhiannon's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Rhiannon's Final Project: Radio!</h1>
+    <div class="header">
+      <video controls autoplay>
+        <source src="Radio_video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <br>
+      <h2>Concept & Goals</h2>
+      <figure>
+        <img src="ProjectProposal.jpg">
+        <figcaption> As shown above, the initial concept was a wifi enabled radio. This changed to be a FM radio (using the TEA5767 module).
+          The main goal was to have a radio seperate from any computer or phone. It needed to have an LCD screen to show the station, and a 
+          knob to control the station. Originally, the LCD screen was also intended to show the time (and potentially date) but this proved to 
+          be outside of the scope of the project. 
+        </figcaption>
+      </figure>
+      <br>
+      <h2>Schematic</h2>
+      <figure>
+        <img src="Radio_Schematic.jpg">
+        <figcaption> Schematic for LCD screen, a potentiometer (used to change stations), and the TEA5767 module with amplifier and speaker. 
+          All ground is to the same ground, and all power is to a 5V pin (the arduino is powered by a 9V battery or 9V wall chord). The LCD A 
+          pin connects to power with a 10K ohm resistor, as is standard. The V0 pin connects to power through a 2k ohm resistor, calculated by 
+          first using a potentiometer, then measuring what value it was set to. This pin is for the backlighting value of the LCD. 
+        </figcaption>
+      </figure>
+      <br>
+      <h2>Circuit</h2>
+      <figure>
+        <img src="Radio_Circuit.jpg">
+        <figcaption> The physical circuit based on the schematic. The potentiomenter is used to set the station (values are mapped to FM values 
+          for the LCD, then to bits to send to the radio module). The radio module (TEA5767) sends the signal to the amplifier/speaker. Two libraries
+          are used, the LiquidCrystal library (for the LCD) and the Wire library (for talking to the TEA5767 module). 
+        </figcaption>
+      </figure>
+      <br>
+      <h2>Code</h2>
+      <pre><code>
+        // Runs a FM radio with LCD display. Stations changed via potentiometer
+
+        // add libraries for LCD screen and sending information to the radio module
+        #include &lt;Wire.h&gt; // sending/recieving information from I2C devices, in this case: TEA5767
+        #include &lt;LiquidCrystal.h&gt; // LCD screen
+
+        #define TEA5767_I2C_ADDRESS 0x60 // permanent variable connecting radio to 0x60, based on online examples
+        #define POT_PIN A0 // Analog pin connected to potentiometer
+
+        const int rs = 12, en = 11, d4 = 9, d5 = 8, d6 = 3, d7 = 2; // variables for pins for LCD screen
+        LiquidCrystal lcd(rs, en, d4, d5, d6, d7); // place all pins in LCD variable
+        float totalFreq = 0; // new variable for totalFrequency, used to reduce noise
+
+        void setup() {
+          Wire.begin(); // set up communication with TEA5767
+          Serial.begin(115200); // set up communication at high rate with other devices
+
+          lcd.begin(16, 2); // set up LCD screen
+        }
+
+        void loop() {
+          int potValue = analogRead(POT_PIN); // set potentiometer value to potValue: will be used for frequency
+          float frequency = map(potValue, 0, 1023, 875, 1080) / 10.0; // Map to FM frequency range 87.5 - 108.0 MHz
+          for (int i = 0; i < 10; i++) { // average frequency out to account for noise
+            totalFreq += frequency; // add new frequency value
+            frequency = map(analogRead(POT_PIN), 0, 1023, 875, 1080) / 10.0; // change to new frequency value
+            delay(10); // delay .01 seconds between each reading
+          }
+          frequency = totalFreq / 10; // average out 5 frequency readings
+          frequency = round(frequency * 10) / 10.0; // round to first decimal point
+          setFrequency(frequency); // set TEA5767 frequency, function
+          displayFrequency(frequency); // display frequency on LCD, function
+
+          totalFreq = 0; // reset total frequency
+          delay(1000); // delay for one second
+        }
+
+        void setFrequency(float frequency) {
+          // based off code from wire examples
+          uint16_t frequencyB = (4 * (frequency * 1000000 + 225000)) / 32768; // convert frequency to bits
+          byte frequencyH = frequencyB >> 8; // shift bit value using arithmetic shift
+          byte frequencyL = frequencyB & 0xFF; // bitmask values
+ 
+
+          // based off code from wire examples
+          Wire.beginTransmission(TEA5767_I2C_ADDRESS); // write via wire to TEA5767
+          Wire.write(frequencyH); // write shifted bit value
+          Wire.write(frequencyL); // write bitmasked value
+          Wire.write(0xB0); // High side LO injection
+          Wire.write(0x10); // Mute off
+          Wire.write(0x00); // No search mode
+          Wire.endTransmission(); // stop writing to TEA5767
+        }
+
+        void displayFrequency(float frequency) {
+          lcd.setCursor(0, 0); // set cursor at beginning of LCD (top left)
+          lcd.print(frequency); // print out frequency
+        }
+      </code></pre>
+      <br>
+  </body>
+</html>
