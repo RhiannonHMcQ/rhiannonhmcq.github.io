@@ -42,7 +42,8 @@
         <img src="Radio_Circuit.jpg">
         <figcaption> The physical circuit based on the schematic. The potentiomenter is used to set the station (values are mapped to FM values 
           for the LCD, then to bits to send to the radio module). The radio module (TEA5767) sends the signal to the amplifier/speaker. Two libraries
-          are used, the LiquidCrystal library (for the LCD) and the Wire library (for talking to the TEA5767 module). 
+          are used, the LiquidCrystal library (for the LCD) and the Wire library (for talking to the TEA5767 module). The circuitry is inside a 
+          cardboard box (shown in the demo video).
         </figcaption>
       </figure>
       <br>
@@ -108,5 +109,14 @@
         }
       </code></pre>
       <br>
+      <h2>Future plans</h2>
+      <p> 
+        The timeline of this project, about two weeks, did not include time for some of the original plans. As time allows in the future,
+        there are a few changes that will be made. Replacing the breadboard with a perfboard, and soldering or crimping the rest of the wires,
+        is a top priority. At this time, sharp movements can lead to wires being dislodged. After that, I plan to focus on creating a more 
+        permanent container for the radio. This is likely to include a lego container, potentially with an older radio style design. At this point 
+        I will also look into how I'm powering the radio. Currently, it's connected to a 9V battery, but it could be plugged directly into the wall. 
+        The lowest priority change is adding a real time clock, and printing the time to the LCD as well (as was originally planned).
+      </p>
   </body>
 </html>
